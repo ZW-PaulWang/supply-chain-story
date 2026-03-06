@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MedTech Control Tower | Project Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --teal: #0d9488;
+      --teal-dark: #0f766e;
+      --accent: #2563eb;
+      --warning: #f59e0b;
+      --danger: #e11d48;
+      --line: #e2e8f0;
+      --card: #ffffff;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --shadow-glow: 0 0 40px -10px rgba(13, 148, 136, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Manrope", sans-serif;
+      background-color: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- STUNNING COVER PAGE --- */
+    .cover-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+      color: #f8fafc;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover-page::before {
+      content: "";
+      position: absolute;
+      width: 80vw;
+      height: 80vw;
+      background: radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 60%);
+      top: -40vw;
+      left: 10vw;
+      pointer-events: none;
+    }
+
+    .cover-kicker {
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #5eead4;
+      font-weight: 700;
+      margin-bottom: 24px;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    .cover-title {
+      font-family: "Fraunces", serif;
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 1.05;
+      max-width: 1000px;
+      margin: 0 0 24px;
+      letter-spacing: -0.02em;
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    .cover-subtitle {
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      max-width: 700px;
+      margin: 0 0 48px;
+      animation: fadeIn 1.4s ease forwards;
+    }
+
+    .scroll-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      animation: pulse 2s infinite;
+    }
+
+    .scroll-indicator svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* --- SCROLLYTELLING LAYOUT --- */
+    .story {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 60px;
+      padding: 80px 20px 80px;
+    }
+
+    /* --- STICKY DASHBOARD --- */
+    .visual-wrap {
+      position: sticky;
+      top: 40px;
+      height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+    }
+
+    .platform {
+      width: 100%;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+      overflow: hidden;
+    }
+
+    .platform-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .platform-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+    }
+
+    .view-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      background: #ccfbf1;
+      border-radius: 4px;
+      padding: 4px 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .platform-body {
+      padding: 24px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .panel {
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel h4 {
+      margin: 0 0 16px;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .kpi {
+      padding-right: 12px;
+      border-right: 1px solid var(--line);
+    }
+    .kpi:last-child { border-right: none; }
+
+    .kpi b {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-family: "Fraunces", serif;
+      font-weight: 600;
+    }
+
+    .kpi span {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.2;
+      display: block;
+    }
+
+    .main-chart {
+      height: 220px;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chart-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transition: all 0.5s ease;
+    }
+
+    .logic-box {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: var(--ink);
+      border: 1px dashed #cbd5e1;
+    }
+
+    .logic-box span { color: var(--teal-dark); font-weight: 700; }
+
+    .data-fade { transition: opacity 0.4s ease, filter 0.4s ease; }
+    .data-updating { opacity: 0; filter: blur(4px); }
+
+    /* --- SCROLLING STEPS --- */
+    .steps { padding-bottom: 20vh; }
+    .step { min-height: 80vh; display: flex; align-items: center; }
+
+    .step-card {
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: var(--shadow-lg);
+      padding: 32px;
+      width: 100%;
+      opacity: 0.3;
+      transform: translateX(20px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .step.active .step-card {
+      opacity: 1;
+      transform: translateX(0);
+      background: #ffffff;
+      border-color: var(--line);
+    }
+
+    .step-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    .step-card h3 {
+      margin: 0 0 16px;
+      font-family: "Fraunces", serif;
+      font-size: 1.6rem;
+      line-height: 1.2;
+    }
+
+    .step-card p { margin: 0 0 12px; color: var(--muted); font-size: 1rem; }
+
+    /* --- PREMIUM ENDING PAGE --- */
+    .premium-ending {
+      background: linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 100%);
+      padding: 100px 20px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+    }
+
+    .ending-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 60px 40px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid #ffffff;
+    }
+
+    .ending-title {
+      font-family: "Fraunces", serif;
+      font-size: 2.5rem;
+      color: var(--ink);
+      margin: 0 0 20px;
+    }
+
+    .ending-copy {
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin: 0 0 40px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--teal-dark);
+      color: #fff;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: #0f172a;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(10px); opacity: 0.5; }
+    }
+
+    @media (max-width: 980px) {
+      .story { grid-template-columns: 1fr; padding: 20px; }
+      .visual-wrap { position: relative; top: 0; height: auto; margin-bottom: 40px; }
+      .step { min-height: auto; margin-bottom: 24px; }
+      .step-card { opacity: 1; transform: none; }
+      .cover-title { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="cover-page">
+    <div class="cover-kicker">Interactive R Shiny Simulation</div>
+    <h1 class="cover-title">Visualizing The Bullwhip Effect In MedTech Supply Chains</h1>
+    <p class="cover-subtitle">
+      Small fluctuations in end demand generate amplified, costly inefficiencies upstream. 
+      Experience how data visualization transforms fragmented operational data into a unified Control Tower.
+    </p>
+    <div class="scroll-indicator">
+      Scroll to Explore
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </div>
+  </section>
+
+  <section class="story">
+    <div class="visual-wrap">
+      <div class="platform">
+        <div class="platform-head">
+          <div class="platform-title"><span class="dot"></span> MedTech Shiny App</div>
+          <div class="view-pill data-fade" id="viewPill">Executive Overview</div>
+        </div>
+        <div class="platform-body">
+          
+          <div class="panel">
+            <h4>System Health <span id="kpiContext" class="data-fade">Q1 2025</span></h4>
+            <div class="kpi-row data-fade">
+              <div class="kpi"><b id="kpiA">42,860</b><span id="labelA">Devices in Transit</span></div>
+              <div class="kpi"><b id="kpiB">14 Days</b><span id="labelB">Avg Lead Time</span></div>
+              <div class="kpi"><b id="kpiC">$1.2M</b><span id="labelC">Gross Profit</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h4 id="chartTitle" class="data-fade">End-To-End Flow</h4>
+            <div class="main-chart data-fade">
+              <svg class="chart-svg" viewBox="0 0 100 50" preserveAspectRatio="none">
+                <path id="chartPath1" fill="rgba(13, 148, 136, 0.2)" d="M0,10 C30,10 40,20 100,20 L100,25 C40,25 30,15 0,15 Z" style="transition: all 0.6s ease;"/>
+                <path id="chartPath2" fill="rgba(37, 99, 235, 0.2)" d="M0,30 C40,30 60,10 100,10 L100,18 C60,18 40,38 0,38 Z" style="transition: all 0.6s ease;"/>
+                <path id="chartPath3" fill="none" stroke="var(--danger)" stroke-width="0" d="M0,25 L100,25" style="transition: all 0.6s ease;"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h4>Underlying Logic</h4>
+            <div class="logic-box data-fade" id="logicBox">
+              <span>Gross Profit</span> = Units Sold × Manufacturer Margin
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <article class="step" data-step="1">
+        <div class="step-card">
+          <span class="step-label">The Problem</span>
+          <h3>Fragmented Operational Data</h3>
+          <p>The simulated supply chain includes four sequential nodes: manufacturer, supplier, seller, and hospital[cite: 15].</p>
+          <p>When visibility is limited across these stages, minor changes in hospital demand create the <strong>bullwhip effect</strong>—causing firms to overproduce or suffer stockouts.</p>
+        </div>
+      </article>
+
+      <article class="step" data-step="2">
+        <div class="step-card">
+          <span class="step-label">View 1</span>
+          <h3>Executive Overview</h3>
+          <p>The dashboard is organized into three analytical views[cite: 36]. This first view establishes immediate context.</p>
+          <p>By tracking physical flow and manufacturer margins, it calculates the current Quarter Gross Profit, answering immediately if the system is operating efficiently.</p>
+        </div>
+      </article>
+
+      <article class="step" data-step="3">
+        <div class="step-card">
+          <span class="step-label">View 2</span>
+          <h3>Flow & Capital Analysis</h3>
+          <p>A Sankey diagram maps device movement. Crucially, users can toggle between Unit Volume mode and <strong>Capital mode</strong>.</p>
+          <p>Switching to Capital mode instantly highlights financial exposure, showing exactly how much capital is tied up in stagnant stock.</p>
+        </div>
+      </article>
+
+      <article class="step" data-step="4">
+        <div class="step-card">
+          <span class="step-label">View 3</span>
+          <h3>Forecasting True Demand</h3>
+          <p>The third view introduces time series forecasting based on actual hospital consumption.</p>
+          <p>Using an ARIMA model, the dashboard projects next quarter's true hospital demand, cutting through the noise of intermediary seller orders.</p>
+        </div>
+      </article>
+      
+      <article class="step" data-step="5">
+        <div class="step-card">
+          <span class="step-label">Optimization</span>
+          <h3>Predictive Profitability</h3>
+          <p>Instead of a flat estimate, the dashboard models a dynamic profitability curve. Forecasted demand (light teal) is adjusted against existing downstream inventory.</p>
+          <p>The resulting <strong>Required Production</strong> (dark blue area) visually demonstrates how end-to-end visibility prevents overproduction and tightly protects margins.</p>
+        </div>
+      </article>
+
+      <article class="step" data-step="6">
+        <div class="step-card">
+          <span class="step-label">Deep Dive</span>
+          <h3>Granular Inventory Inspection</h3>
+          <p>High-level metrics aren't always enough. The dashboard allows users to click directly into the supplier and seller nodes.</p>
+          <p>This reveals exactly <strong>which specific product types</strong> are currently held up in transit, granting immediate tactical visibility to operational teams.</p>
+        </div>
+      </article>
+
+      <article class="step" data-step="7">
+        <div class="step-card">
+          <span class="step-label">Data Access</span>
+          <h3>Export & Audit</h3>
+          <p>Transparency builds trust. Users aren't locked into the visualizations.</p>
+          <p>The dedicated Data Hub allows users to inspect the exact synthetic datasets powering their current filters and securely <strong>download the clean CSV data</strong> for external auditing.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+<section class="premium-ending">
+    <div class="ending-card">
+      <h2 class="ending-title">Ready To Explore The Live Data?</h2>
+      <p class="ending-copy">
+        The MedTech Control Tower is fully built in R and Shiny, leveraging synthetic device-level data to model complex financial and physical flows. Jump into the simulation to test demand shocks and explore the views.
+      </p>
+      <a href="https://paul-wang.shinyapps.io/final_project/" target="_blank" rel="noopener noreferrer" class="btn-primary">Launch Shiny Dashboard</a>
+    </div>
+  </section>
+
+  <script>
+    const stepConfigs = {
+      1: {
+        pill: "System Architecture", ctx: "Current State",
+        kpiA: "4 Nodes", labelA: "Supply Chain Stages", kpiB: "Low", labelB: "Cross-Node Visibility", kpiC: "High", labelC: "Bullwhip Risk",
+        title: "Information Silos",
+        logic: "Manufacturer -> Supplier -> Seller -> Hospital",
+        p1: "M0,25 L100,25", p2: "M0,25 L100,25", p3: "M0,25 L30,40 L60,10 L100,25", stroke: "2" // jagged line
+      },
+      2: {
+        pill: "Executive Overview", ctx: "Q1 2025",
+        kpiA: "42,860", labelA: "Devices in Transit", kpiB: "14 Days", labelB: "Avg Lead Time", kpiC: "$1.2M", labelC: "Gross Profit",
+        title: "Operational & Financial Health",
+        logic: "<span>Gross Profit</span> = Units Sold × Manufacturer Margin",
+        p1: "M0,10 C30,10 40,20 100,20 L100,25 C40,25 30,15 0,15 Z", p2: "M0,30 C40,30 60,10 100,10 L100,18 C60,18 40,38 0,38 Z", p3: "M0,0 L0,0", stroke: "0" // abstract flow
+      },
+      3: {
+        pill: "Flow Analysis", ctx: "Capital Mode",
+        kpiA: "12,400", labelA: "Stagnant Units", kpiB: "$3.8M", labelB: "Capital Exposure", kpiC: "Seller", labelC: "Primary Bottleneck",
+        title: "Sankey Flow: Capital Tied Up",
+        logic: "<span>Capital Exposure</span> = ∑(Stagnant Inventory × Wholesale Price)",
+        p1: "M0,5 C40,5 50,35 100,35 L100,45 C50,45 40,15 0,15 Z", p2: "M0,20 C30,20 40,5 100,5 L100,10 C40,10 30,25 0,25 Z", p3: "M0,0 L0,0", stroke: "0" // thick sankey overlap
+      },
+      4: {
+        pill: "Forecasting", ctx: "ARIMA Model",
+        kpiA: "18,200", labelA: "Forecasted Demand", kpiB: "± 4%", labelB: "Confidence Interval", kpiC: "Stable", labelC: "Trend Outlook",
+        title: "Hospital Consumption Forecast",
+        logic: "<span>ARIMA(1,0,0)</span> applied to historical deployment data",
+        p1: "M0,50 L0,50", p2: "M0,50 L0,50", p3: "M0,40 C30,35 60,45 100,10", stroke: "3" // single line curve
+      },
+      5: {
+        pill: "Profitability", ctx: "Optimized Output",
+        kpiA: "18,200", labelA: "Raw Demand", kpiB: "6,600", labelB: "Inventory Credit", kpiC: "11,600", labelC: "Required Production",
+        title: "Demand vs Optimized Production",
+        logic: "<span>Required Production</span> = Forecasted Demand - Downstream Inventory",
+        p1: "M0,50 L0,30 C30,20 60,40 100,10 L100,50 Z", // Large background area (Demand)
+        p2: "M0,50 L0,40 C30,30 60,45 100,20 L100,50 Z", // Smaller foreground area (Optimized Production)
+        p3: "M0,0 L0,0", stroke: "0" 
+      },
+      6: {
+        pill: "Data Inspection", ctx: "Drill-Down",
+        kpiA: "Node Click", labelA: "Interaction", kpiB: "SKU Level", labelB: "Granularity", kpiC: "Visible", labelC: "Stuck Products",
+        title: "Seller/Supplier Inventory Log",
+        logic: "<span>Filter</span> = (node_type == 'Seller' AND is_deployed == FALSE)",
+        p1: "M10,10 L90,10 L90,15 L10,15 Z M10,25 L70,25 L70,30 L10,30 Z M10,40 L80,40 L80,45 L10,45 Z", // Abstract bar chart / list
+        p2: "M0,0 L0,0", p3: "M0,0 L0,0", stroke: "0" 
+      },
+      7: {
+        pill: "Data Access", ctx: "Data Hub",
+        kpiA: ".CSV", labelA: "Export Format", kpiB: "Cleaned", labelB: "Data State", kpiC: "Auditable", labelC: "Trust Factor",
+        title: "Dataset Explorer",
+        logic: "<span>Export()</span> -> downloadButton('download_dataset')",
+        p1: "M30,10 L70,10 L70,40 L30,40 Z", // Abstract document shape
+        p2: "M40,20 L60,20 Z M40,25 L60,25 Z M40,30 L50,30 Z", // Lines on document
+        p3: "M0,0 L0,0", stroke: "1" 
+      }
+    };
+
+    const steps = document.querySelectorAll('.step');
+    const fadeElements = document.querySelectorAll('.data-fade');
+    
+    const nodes = {
+      pill: document.getElementById('viewPill'), ctx: document.getElementById('kpiContext'),
+      kpiA: document.getElementById('kpiA'), labelA: document.getElementById('labelA'),
+      kpiB: document.getElementById('kpiB'), labelB: document.getElementById('labelB'),
+      kpiC: document.getElementById('kpiC'), labelC: document.getElementById('labelC'),
+      title: document.getElementById('chartTitle'), logic: document.getElementById('logicBox'),
+      p1: document.getElementById('chartPath1'), p2: document.getElementById('chartPath2'), p3: document.getElementById('chartPath3')
+    };
+
+    let currentStep = 0;
+
+    function applyStep(stepNum) {
+      if (stepNum === currentStep) return;
+      currentStep = stepNum;
+      const cfg = stepConfigs[stepNum];
+      
+      fadeElements.forEach(el => el.classList.add('data-updating'));
+      
+      setTimeout(() => {
+        nodes.pill.textContent = cfg.pill; nodes.ctx.textContent = cfg.ctx;
+        nodes.kpiA.textContent = cfg.kpiA; nodes.labelA.textContent = cfg.labelA;
+        nodes.kpiB.textContent = cfg.kpiB; nodes.labelB.textContent = cfg.labelB;
+        nodes.kpiC.textContent = cfg.kpiC; nodes.labelC.textContent = cfg.labelC;
+        nodes.title.textContent = cfg.title; nodes.logic.innerHTML = cfg.logic;
+        
+        nodes.p1.setAttribute('d', cfg.p1); nodes.p2.setAttribute('d', cfg.p2); 
+        nodes.p3.setAttribute('d', cfg.p3);
+        
+        // Handle stylistic chart transitions (lines vs areas)
+        nodes.p3.setAttribute('stroke-width', cfg.stroke);
+        if(stepNum === 4 || stepNum === 1 || stepNum === 7) {
+            nodes.p1.setAttribute('fill', 'none'); nodes.p2.setAttribute('fill', 'none');
+            if (stepNum === 7) {
+                nodes.p1.setAttribute('fill', 'rgba(13, 148, 136, 0.1)');
+                nodes.p1.setAttribute('stroke', 'var(--teal)');
+                nodes.p2.setAttribute('stroke', 'var(--teal)');
+            } else {
+                 nodes.p1.setAttribute('stroke', 'none');
+                 nodes.p2.setAttribute('stroke', 'none');
+            }
+        } else if (stepNum === 6) {
+             nodes.p1.setAttribute('fill', 'var(--teal)'); nodes.p1.setAttribute('stroke', 'none');
+             nodes.p2.setAttribute('fill', 'none'); nodes.p2.setAttribute('stroke', 'none');
+        } else {
+            nodes.p1.setAttribute('fill', 'rgba(13, 148, 136, 0.2)'); nodes.p2.setAttribute('fill', 'rgba(37, 99, 235, 0.3)');
+            nodes.p1.setAttribute('stroke', 'none'); nodes.p2.setAttribute('stroke', 'none');
+        }
+        
+        fadeElements.forEach(el => el.classList.remove('data-updating'));
+      }, 400); 
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          steps.forEach(s => s.classList.remove('active'));
+          entry.target.classList.add('active');
+          applyStep(Number(entry.target.dataset.step));
+        }
+      });
+    }, { rootMargin: "-25% 0px -40% 0px" });
+
+    steps.forEach(step => observer.observe(step));
+  </script>
+</body>
+</html>
